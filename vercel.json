@@ -1,4 +1,15 @@
 {
+  "functions": {
+    "api/**/*.js": {
+      "runtime": "@vercel/node@2"
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/",
+      "destination": "/index.html"
+    }
+  ],
   "headers": [
     {
       "source": "/api/(.*)",
