@@ -683,7 +683,7 @@
             
             const a = document.createElement('a');
             a.href = url;
-            a.download = `zhipu_chatbot_${new Date().toISOString().split('T')[0]}.html`;
+            a.download = 'zhipu_chatbot.html';
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
