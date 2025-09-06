@@ -207,6 +207,10 @@
             resize: none;
             min-height: 44px;
             max-height: 120px;
+            font-size: 16px;
+            line-height: 1.5;
+            font-family: inherit;
+            overflow-y: auto;
         }
 
         .chat-input:focus {
@@ -310,9 +314,7 @@
             </select>
         </div>
 
-        <button class="action-button" id="validateButton" onclick="validateApiKey()">
-            <i class='bx bx-check-circle'></i> 验证API Key
-        </button>
+        <!-- 验证按钮已移除，改为自动验证 -->
 
         <div id="statusMessage"></div>
 
@@ -335,6 +337,7 @@
                     id="chatInput" 
                     placeholder="输入您的消息..."
                     onkeydown="handleKeyDown(event)"
+                    rows="1"
                 ></textarea>
                 <button class="send-button" id="sendButton" onclick="sendMessage()">
                     <i class='bx bx-send'></i> 发送
@@ -418,8 +421,6 @@
                     showStatus('API Key验证成功！', 'success');
                     document.getElementById('chatbotSection').style.display = 'block';
                     document.getElementById('downloadButton').style.display = 'block';
-                    document.getElementById('validateButton').textContent = '已验证';
-                    document.getElementById('validateButton').disabled = true;
                 } else {
                     // API Key错误时显示持久错误消息
                     const isAuthError = response.status === 401 || result.error?.includes('API key') || result.error?.includes('unauthorized');
@@ -516,6 +517,29 @@
             if (event.key === 'Enter' && !event.shiftKey) {
                 event.preventDefault();
                 sendMessage();
+            }
+        }
+
+        // 自动调整输入框高度
+        function autoResizeTextarea() {
+            const textarea = document.getElementById('chatInput');
+            textarea.style.height = 'auto';
+            
+            // 计算行数，最多3行
+            const lineHeight = 24; // 1.5 * 16px
+            const maxLines = 3;
+            const minHeight = 44; // 最小高度
+            
+            const scrollHeight = textarea.scrollHeight;
+            const newHeight = Math.min(scrollHeight, lineHeight * maxLines + 24); // 24px for padding
+            
+            textarea.style.height = Math.max(newHeight, minHeight) + 'px';
+            
+            // 如果超过3行，显示滚动条
+            if (scrollHeight > lineHeight * maxLines + 24) {
+                textarea.style.overflowY = 'auto';
+            } else {
+                textarea.style.overflowY = 'hidden';
             }
         }
 
@@ -651,11 +675,6 @@
 
         // 重置验证状态
         function resetValidationState() {
-            // 重置按钮状态
-            const validateButton = document.getElementById('validateButton');
-            validateButton.innerHTML = '<i class="bx bx-check-circle"></i> 验证API Key';
-            validateButton.disabled = false;
-            
             // 隐藏聊天区域和下载按钮
             document.getElementById('chatbotSection').style.display = 'none';
             document.getElementById('downloadButton').style.display = 'none';
@@ -671,6 +690,9 @@
         document.getElementById('modelSelect').addEventListener('change', (e) => {
             currentModel = e.target.value;
         });
+
+        // 为聊天输入框添加自动调整高度功能
+        document.getElementById('chatInput').addEventListener('input', autoResizeTextarea);
     </script>
 </body>
 </html>
