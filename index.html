@@ -282,7 +282,12 @@
     <div class="container">
         <div class="header">
             <h1>🤖 智谱AI聊天</h1>
-            <p>基于智谱GLM大模型的智能对话助手</p>
+            <p>
+                <strong>获取API Key步骤：</strong><br>
+                1. 前往 <a href="https://bigmodel.cn/usercenter/proj-mgmt/apikeys" target="_blank" style="color: #667eea; text-decoration: none;">智谱AI控制台</a><br>
+                2. 注册账号并点击"添加新的API Key"<br>
+                3. 复制生成的API Key并粘贴到下方输入框
+            </p>
         </div>
 
         <!-- 配置区域 -->
@@ -301,12 +306,12 @@
         <div class="form-group">
             <label for="modelSelect">模型选择</label>
             <select id="modelSelect">
+                <option value="glm-4-flash" selected>GLM-4-Flash (推荐)</option>
                 <option value="glm-4-plus">GLM-4-Plus</option>
                 <option value="glm-4-0520">GLM-4-0520</option>
                 <option value="glm-4">GLM-4</option>
                 <option value="glm-4-air">GLM-4-Air</option>
                 <option value="glm-4-airx">GLM-4-AirX</option>
-                <option value="glm-4-flash">GLM-4-Flash</option>
             </select>
         </div>
 
@@ -349,7 +354,7 @@
 
     <script>
         let currentApiKey = '';
-        let currentModel = 'glm-4-plus';
+        let currentModel = 'glm-4-flash';
         let chatHistory = [];
         let apiBaseUrl = 'https://zhipu-llm-api.vercel.app/api'; // 将部署后的URL
 
