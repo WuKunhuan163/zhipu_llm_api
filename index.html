@@ -560,7 +560,7 @@
             
             const a = document.createElement('a');
             a.href = url;
-            a.download = `智谱AI聊天记录_${new Date().toISOString().split('T')[0]}.html`;
+            a.download = 'zhipu_chat_history.html';
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
