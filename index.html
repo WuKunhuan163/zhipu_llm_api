@@ -380,7 +380,7 @@
             const model = document.getElementById('modelSelect').value;
             
             if (!apiKey) {
-                showStatus('请输入API Key', 'error');
+                showStatus('请输入API Key', 'error', true); // 持久显示
                 return;
             }
 
@@ -422,7 +422,7 @@
                 }
             } catch (error) {
                 console.error('验证错误:', error);
-                showStatus('验证失败，请检查网络连接', 'error');
+                showStatus('验证失败，请检查网络连接', 'error', true); // 持久显示网络错误
             }
         }
 
