@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🤖 智谱AI聊天@Vercel</title>
+    <title>智谱AI聊天@Vercel</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤖</text></svg>">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <style>
@@ -306,12 +306,7 @@
         <div class="form-group">
             <label for="modelSelect">模型选择</label>
             <select id="modelSelect">
-                <option value="glm-4-flash" selected>GLM-4-Flash (推荐)</option>
-                <option value="glm-4-plus">GLM-4-Plus</option>
-                <option value="glm-4-0520">GLM-4-0520</option>
-                <option value="glm-4">GLM-4</option>
-                <option value="glm-4-air">GLM-4-Air</option>
-                <option value="glm-4-airx">GLM-4-AirX</option>
+                <option value="glm-4-flash" selected>GLM-4-Flash</option>
             </select>
         </div>
 
@@ -411,7 +406,7 @@
                     showStatus('API Key验证成功！', 'success');
                     document.getElementById('chatbotSection').style.display = 'block';
                     document.getElementById('downloadButton').style.display = 'block';
-                    document.getElementById('validateButton').textContent = '✅ 已验证';
+                    document.getElementById('validateButton').textContent = '已验证';
                     document.getElementById('validateButton').disabled = true;
                 } else {
                     showStatus(`验证失败: ${result.error}`, 'error');
