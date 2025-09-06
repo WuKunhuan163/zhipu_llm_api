@@ -362,12 +362,16 @@
         }
 
         // 显示状态消息
-        function showStatus(message, type = 'info') {
+        function showStatus(message, type = 'info', persistent = false) {
             const statusDiv = document.getElementById('statusMessage');
             statusDiv.innerHTML = `<div class="status-message ${type}">${message}</div>`;
-            setTimeout(() => {
-                statusDiv.innerHTML = '';
-            }, 3000);
+            
+            // 如果不是持久消息，3秒后清除
+            if (!persistent) {
+                setTimeout(() => {
+                    statusDiv.innerHTML = '';
+                }, 3000);
+            }
         }
 
         // 验证API Key
@@ -409,7 +413,12 @@
                     document.getElementById('validateButton').textContent = '已验证';
                     document.getElementById('validateButton').disabled = true;
                 } else {
-                    showStatus(`验证失败: ${result.error}`, 'error');
+                    // API Key错误时显示持久错误消息
+                    const isAuthError = response.status === 401 || result.error?.includes('API key') || result.error?.includes('unauthorized');
+                    const errorMsg = isAuthError
+                        ? '❌ API Key无效！请确保从智谱AI控制台正确复制了完整的API Key，并检查是否有多余的空格。' 
+                        : `验证失败: ${result.error}`;
+                    showStatus(errorMsg, 'error', true); // 持久显示错误消息
                 }
             } catch (error) {
                 console.error('验证错误:', error);
