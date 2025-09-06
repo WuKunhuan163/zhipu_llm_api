@@ -686,51 +686,6 @@
             }
         });
 
-        // 自动验证API Key
-        async function autoValidateApiKey(apiKey) {
-            console.log("🔧 autoValidateApiKey called with:", apiKey?.substring(0, 8) + "...");
-            if (!apiKey || apiKey === currentApiKey) return;
-            
-            const model = document.getElementById("modelSelect").value;
-            currentApiKey = apiKey;
-            currentModel = model;
-            
-            showStatus("正在验证API Key...", "info");
-            
-            try {
-                const response = await fetch(`${apiBaseUrl}/chat`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        apiKey: currentApiKey,
-                        model: currentModel,
-                        messages: [
-                            { role: "user", content: "你好" }
-                        ]
-                    })
-                });
-
-                const result = await response.json();
-                
-                if (result.success) {
-                    showStatus("API Key验证成功！", "success");
-                    document.getElementById("chatbotSection").style.display = "block";
-                    document.getElementById("downloadButton").style.display = "block";
-                } else {
-                    const isAuthError = response.status === 401 || result.error?.includes("API key") || result.error?.includes("unauthorized");
-                    const errorMsg = isAuthError
-                        ? "API Key无效！请确保从智谱AI控制台正确复制了完整的API Key，并检查是否有多余的空格。"
-                        : `验证失败: ${result.error}`;
-                    showStatus(errorMsg, "error", true);
-                }
-            } catch (error) {
-                console.error("验证错误:", error);
-                showStatus("验证失败，请检查网络连接", "error", true);
-            }
-        }
-
         // 重置验证状态
         function resetValidationState() {
             // 隐藏聊天区域和下载按钮
