@@ -914,7 +914,7 @@
         // 显示状态消息
         function showStatus(message, type = 'info', persistent = false) {
             const statusDiv = document.getElementById('statusMessage');
-            statusDiv.innerHTML = \`<div class="status-message \${type}">\${message}</div>\`;
+            statusDiv.innerHTML = '<div class="status-message ' + type + '">' + message + '</div>';
             
             if (statusTimer) {
                 clearTimeout(statusTimer);
@@ -1019,13 +1019,12 @@
         function addMessage(role, content) {
             const messagesContainer = document.getElementById('chatbotMessages');
             const messageDiv = document.createElement('div');
-            messageDiv.className = \`message \${role}\`;
+            messageDiv.className = 'message ' + role;
             
             const avatar = role === 'user' ? '👤' : '🤖';
-            messageDiv.innerHTML = \`
-                <div class="message-avatar">\${avatar}</div>
-                <div class="message-content">\${content}</div>
-            \`;
+            messageDiv.innerHTML = 
+                '<div class="message-avatar">' + avatar + '</div>' +
+                '<div class="message-content">' + content + '</div>';
             
             messagesContainer.appendChild(messageDiv);
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
