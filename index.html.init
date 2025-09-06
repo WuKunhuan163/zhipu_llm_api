@@ -750,8 +750,7 @@
         }
 
         // 初始化
-        // 显示初始提示
-        showStatus("请输入您的智谱AI API Key，输入完成后稍等片刻将自动验证", "info", true);        document.getElementById('modelSelect').addEventListener('change', (e) => {
+        document.getElementById('modelSelect').addEventListener('change', (e) => {
             currentModel = e.target.value;
         });
 
