@@ -416,7 +416,7 @@
                     // API Key错误时显示持久错误消息
                     const isAuthError = response.status === 401 || result.error?.includes('API key') || result.error?.includes('unauthorized');
                     const errorMsg = isAuthError
-                        ? '❌ API Key无效！请确保从智谱AI控制台正确复制了完整的API Key，并检查是否有多余的空格。' 
+                        ? 'API Key无效！请确保从智谱AI控制台正确复制了完整的API Key，并检查是否有多余的空格。' 
                         : `验证失败: ${result.error}`;
                     showStatus(errorMsg, 'error', true); // 持久显示错误消息
                 }
@@ -635,8 +635,8 @@
         document.getElementById('zhipuApiKey').addEventListener('input', (e) => {
             const newApiKey = e.target.value.trim();
             
-            // 如果API Key发生变化，重置验证状态
-            if (newApiKey !== currentApiKey) {
+            // 只有当用户已经验证过API Key，且输入了不同的API Key时才重置
+            if (currentApiKey && newApiKey !== currentApiKey) {
                 resetValidationState();
             }
         });
