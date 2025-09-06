@@ -231,7 +231,7 @@
 
         .download-button {
             display: none;
-            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
 
         .status-message {
@@ -505,10 +505,7 @@
             
             const avatar = role === 'user' ? '👤' : '🤖';
             
-            messageDiv.innerHTML = `
-                <div class="message-avatar">${avatar}</div>
-                <div class="message-content">${content}</div>
-            `;
+            messageDiv.innerHTML = '<div class="message-avatar">' + avatar + '</div><div class="message-content">' + content + '</div>';
             
             messagesContainer.appendChild(messageDiv);
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
@@ -580,16 +577,7 @@
                 const avatar = msg.role === 'user' ? '👤' : '🤖';
                 const messageClass = msg.role === 'user' ? 'user-message' : 'ai-message';
                 
-                return `
-                    <div class="message ${messageClass}">
-                        <div class="message-header">
-                            <span class="avatar">${avatar}</span>
-                            <span class="role">${role}</span>
-                            <span class="time">${time}</span>
-                        </div>
-                        <div class="message-content">${msg.content}</div>
-                    </div>
-                `;
+                return '<div class="message ' + messageClass + '"><div class="message-header"><span class="avatar">' + avatar + '</span><span class="role">' + role + '</span><span class="time">' + time + '</span></div><div class="message-content">' + msg.content + '</div></div>';
             }).join('');
 
             return `
@@ -874,7 +862,6 @@
     <div class="container">
         <div class="header">
             <h1>🤖 智谱AI聊天机器人</h1>
-            <p>基于智谱AI GLM-4-Flash模型 | 前端直连API演示</p>
         </div>
         
         <div id="statusMessage"></div>
