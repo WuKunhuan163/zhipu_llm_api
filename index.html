@@ -348,6 +348,10 @@
         <button class="download-button" id="downloadButton" onclick="downloadChatHistory()">
             <i class='bx bx-download'></i> 下载聊天记录
         </button>
+
+        <button class="download-button" id="downloadHtmlButton" onclick="downloadChatbotHtml()" style="display: none; margin-top: 10px;">
+            <i class='bx bx-code-alt'></i> 下载前端HTML
+        </button>
     </div>
 
     <script>
@@ -421,6 +425,7 @@
                     showStatus('API Key验证成功！', 'success');
                     document.getElementById('chatbotSection').style.display = 'block';
                     document.getElementById('downloadButton').style.display = 'block';
+                    document.getElementById('downloadHtmlButton').style.display = 'block';
                 } else {
                     // API Key错误时显示持久错误消息
                     const isAuthError = response.status === 401 || result.error?.includes('API key') || result.error?.includes('unauthorized');
@@ -663,6 +668,384 @@
             `;
         }
 
+        // 下载前端HTML文件（硬嵌入API Key）
+        function downloadChatbotHtml() {
+            if (!currentApiKey) {
+                showStatus('请先验证API Key', 'error');
+                return;
+            }
+
+            // 生成硬嵌入API Key的HTML文件
+            const htmlContent = generateChatbotHTML();
+            
+            const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `zhipu_chatbot_${new Date().toISOString().split('T')[0]}.html`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            
+            URL.revokeObjectURL(url);
+            showStatus('前端HTML文件已下载', 'success');
+        }
+
+        // 生成硬嵌入API Key的前端HTML
+        function generateChatbotHTML() {
+            return `<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智谱AI聊天机器人</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 800px;
+            padding: 30px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .chatbot-messages {
+            max-height: 500px;
+            overflow-y: auto;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            background: #f9f9f9;
+        }
+        
+        .message {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        
+        .message.user {
+            flex-direction: row-reverse;
+        }
+        
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #667eea;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+        
+        .message.user .message-avatar {
+            background: #28a745;
+        }
+        
+        .message-content {
+            background: white;
+            padding: 15px;
+            border-radius: 15px;
+            max-width: 70%;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            word-wrap: break-word;
+            white-space: pre-wrap;
+        }
+        
+        .message.user .message-content {
+            background: #667eea;
+            color: white;
+        }
+        
+        .chat-input-section {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .chat-input {
+            flex: 1;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            resize: none;
+            font-size: 16px;
+            line-height: 1.5;
+            min-height: 44px;
+            max-height: 120px;
+            overflow-y: auto;
+        }
+        
+        .chat-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .send-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 12px 20px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .send-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        .send-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .status-message {
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-size: 14px;
+        }
+        
+        .status-message.info {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .status-message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .status-message.success {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🤖 智谱AI聊天机器人</h1>
+            <p>基于智谱AI GLM-4-Flash模型 | 前端直连API演示</p>
+        </div>
+        
+        <div id="statusMessage"></div>
+        
+        <div class="chatbot-messages" id="chatbotMessages">
+            <div class="message">
+                <div class="message-avatar">🤖</div>
+                <div class="message-content">
+                    您好！我是智谱AI助手，有什么可以帮助您的吗？
+                </div>
+            </div>
+        </div>
+        
+        <div class="chat-input-section">
+            <textarea 
+                class="chat-input" 
+                id="chatInput" 
+                placeholder="输入您的消息..."
+                onkeydown="handleKeyDown(event)"
+                rows="1"
+            ></textarea>
+            <button class="send-button" id="sendButton" onclick="sendMessage()">
+                <i class='bx bx-send'></i> 发送
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // 硬嵌入的API配置
+        const API_KEY = '${currentApiKey}';
+        const API_BASE_URL = 'https://zhipu-llm-api.vercel.app/api/chat';
+        const MODEL = '${currentModel}';
+        
+        let chatHistory = [];
+        let statusTimer = null;
+        
+        // 显示状态消息
+        function showStatus(message, type = 'info', persistent = false) {
+            const statusDiv = document.getElementById('statusMessage');
+            statusDiv.innerHTML = \`<div class="status-message \${type}">\${message}</div>\`;
+            
+            if (statusTimer) {
+                clearTimeout(statusTimer);
+                statusTimer = null;
+            }
+            
+            if (!persistent) {
+                statusTimer = setTimeout(() => {
+                    statusDiv.innerHTML = '';
+                    statusTimer = null;
+                }, 3000);
+            }
+        }
+        
+        // 处理键盘事件
+        function handleKeyDown(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendMessage();
+            }
+        }
+        
+        // 自动调整文本框高度
+        function autoResizeTextarea() {
+            const textarea = document.getElementById('chatInput');
+            textarea.style.height = 'auto';
+            const lineHeight = 24;
+            const maxLines = 3;
+            const minHeight = 44;
+            const scrollHeight = textarea.scrollHeight;
+            const newHeight = Math.min(scrollHeight, lineHeight * maxLines + 24);
+            textarea.style.height = Math.max(newHeight, minHeight) + 'px';
+            if (scrollHeight > lineHeight * maxLines + 24) {
+                textarea.style.overflowY = 'auto';
+            } else {
+                textarea.style.overflowY = 'hidden';
+            }
+        }
+        
+        // 发送消息
+        async function sendMessage() {
+            const chatInput = document.getElementById('chatInput');
+            const sendBtn = document.getElementById('sendButton');
+            const message = chatInput.value.trim();
+            
+            if (!message) {
+                showStatus('请输入消息', 'error');
+                return;
+            }
+            
+            // 添加用户消息到界面
+            addMessage('user', message);
+            chatInput.value = '';
+            autoResizeTextarea();
+            
+            // 禁用发送按钮
+            sendBtn.disabled = true;
+            sendBtn.innerHTML = '<i class="bx bx-loader-alt bx-spin"></i> 发送中...';
+            
+            try {
+                // 调用API
+                const response = await fetch(API_BASE_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        apiKey: API_KEY,
+                        model: MODEL,
+                        messages: [
+                            ...chatHistory.map(msg => ({
+                                role: msg.role,
+                                content: msg.content
+                            })),
+                            { role: 'user', content: message }
+                        ]
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    const aiResponse = result.data?.choices?.[0]?.message?.content || '抱歉，我没有收到有效的回复。';
+                    addMessage('assistant', aiResponse);
+                    showStatus('消息发送成功', 'success');
+                } else {
+                    throw new Error(result.error || '未知错误');
+                }
+            } catch (error) {
+                console.error('发送消息失败:', error);
+                addMessage('assistant', '抱歉，发送消息时出现错误：' + error.message);
+                showStatus('发送失败: ' + error.message, 'error', true);
+            } finally {
+                // 恢复发送按钮
+                sendBtn.disabled = false;
+                sendBtn.innerHTML = '<i class="bx bx-send"></i> 发送';
+                chatInput.focus();
+            }
+        }
+        
+        // 添加消息到界面
+        function addMessage(role, content) {
+            const messagesContainer = document.getElementById('chatbotMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = \`message \${role}\`;
+            
+            const avatar = role === 'user' ? '👤' : '🤖';
+            messageDiv.innerHTML = \`
+                <div class="message-avatar">\${avatar}</div>
+                <div class="message-content">\${content}</div>
+            \`;
+            
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            
+            // 添加到聊天历史
+            chatHistory.push({
+                role: role,
+                content: content,
+                timestamp: new Date()
+            });
+        }
+        
+        // 初始化
+        document.getElementById('chatInput').addEventListener('input', autoResizeTextarea);
+        showStatus('前端HTML已加载，可以开始对话', 'info');
+    </script>
+</body>
+</html>`;
+        }
+
         // 监听API Key输入变化，自动验证
         let validationTimeout = null;
         document.getElementById('zhipuApiKey').addEventListener('input', (e) => {
@@ -723,6 +1106,7 @@
                     showStatus("API Key验证成功！", "success");
                     document.getElementById("chatbotSection").style.display = "block";
                     document.getElementById("downloadButton").style.display = "block";
+                    document.getElementById("downloadHtmlButton").style.display = "block";
                 } else {
                     const isAuthError = response.status === 401 || result.error?.includes("API key") || result.error?.includes("unauthorized");
                     const errorMsg = isAuthError
