@@ -622,6 +622,34 @@
             `;
         }
 
+        // 监听API Key输入变化
+        document.getElementById('zhipuApiKey').addEventListener('input', (e) => {
+            const newApiKey = e.target.value.trim();
+            
+            // 如果API Key发生变化，重置验证状态
+            if (newApiKey !== currentApiKey) {
+                resetValidationState();
+            }
+        });
+
+        // 重置验证状态
+        function resetValidationState() {
+            // 重置按钮状态
+            const validateButton = document.getElementById('validateButton');
+            validateButton.innerHTML = '<i class="bx bx-check-circle"></i> 验证API Key';
+            validateButton.disabled = false;
+            
+            // 隐藏聊天区域和下载按钮
+            document.getElementById('chatbotSection').style.display = 'none';
+            document.getElementById('downloadButton').style.display = 'none';
+            
+            // 清空状态消息
+            document.getElementById('statusMessage').innerHTML = '';
+            
+            // 重置当前API Key
+            currentApiKey = '';
+        }
+
         // 初始化
         document.getElementById('modelSelect').addEventListener('change', (e) => {
             currentModel = e.target.value;
