@@ -352,6 +352,7 @@
         let currentModel = 'glm-4-flash';
         let chatHistory = [];
         let apiBaseUrl = 'https://zhipu-llm-api.vercel.app/api'; // 将部署后的URL
+        let statusTimer = null; // 状态消息定时器
 
         // 复制到剪贴板
         function copyToClipboard(elementId) {
@@ -366,10 +367,17 @@
             const statusDiv = document.getElementById('statusMessage');
             statusDiv.innerHTML = `<div class="status-message ${type}">${message}</div>`;
             
+            // 清除之前的定时器
+            if (statusTimer) {
+                clearTimeout(statusTimer);
+                statusTimer = null;
+            }
+            
             // 如果不是持久消息，3秒后清除
             if (!persistent) {
-                setTimeout(() => {
+                statusTimer = setTimeout(() => {
                     statusDiv.innerHTML = '';
+                    statusTimer = null;
                 }, 3000);
             }
         }
