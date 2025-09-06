@@ -663,13 +663,26 @@
             `;
         }
 
-        // 监听API Key输入变化
+        // 监听API Key输入变化，自动验证
+        let validationTimeout = null;
         document.getElementById('zhipuApiKey').addEventListener('input', (e) => {
             const newApiKey = e.target.value.trim();
             
-            // 只有当用户已经验证过API Key，且输入了不同的API Key时才重置
+            // 清除之前的验证定时器
+            if (validationTimeout) {
+                clearTimeout(validationTimeout);
+            }
+            
+            // 如果API Key发生变化，重置验证状态
             if (currentApiKey && newApiKey !== currentApiKey) {
                 resetValidationState();
+            }
+            
+            // 如果输入了有效长度的API Key，延迟自动验证
+            if (newApiKey && newApiKey.length > 20) {
+                validationTimeout = setTimeout(() => {
+                    autoValidateApiKey(newApiKey);
+                }, 1000); // 1秒后自动验证
             }
         });
 
