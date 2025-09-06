@@ -683,12 +683,7 @@
                 validationTimeout = setTimeout(() => {
                     autoValidateApiKey(newApiKey);
                 }, 1000); // 1秒后自动验证
-            } else if (newApiKey && newApiKey.length > 0 && newApiKey.length <= 20) {
-                // API Key长度不足时的提示
-                showStatus("API Key长度不足，请输入完整的API Key（通常以sk-开头）", "error", true);
-            } else if (newApiKey.length === 0) {
-                // 清空输入时清除状态消息
-                document.getElementById("statusMessage").innerHTML = "";            }
+            }
         });
 
         // 自动验证API Key
